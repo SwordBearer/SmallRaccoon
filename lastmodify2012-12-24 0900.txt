@@ -1,0 +1,17 @@
+﻿lastmode:2012-12-18 0000
+
+ =======2012-12-20 0300 建立============
+
+ 
+=======2013-03-07 1900 修改============
+将HttpGetUtils更名为HttpGetHelper，并取消了静态方法，全部改成非静态
+为HttpGetHelper添加了四个基本方法： 
+	InputStream httpGetStream(HttpClient httpClient,String uri);
+	InputStream httpGetStream(HttpClient httpClient,HttpGet httpGet); 
+	String httpGetString(String uri,String charSet);
+	String httpGetString(HttpGet httpGet,String charSet);
+
+建立了新类 HeaderParams，专门用于存放Http 头及其默认值；
+
+BUG：HttpGetHelper获得的数据不完整
+ 

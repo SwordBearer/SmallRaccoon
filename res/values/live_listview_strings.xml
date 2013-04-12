@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="live_listview_pull">下拉即可刷新</string>
+    <string name="live_listview_release">松开即可刷新</string>
+    <string name="live_listview_loading">加载中...</string>
+    <string name="live_listview_click_more">点击加载更多</string>
+    <string name="live_listview_no_more">已加载完毕</string>
+
+</resources>
