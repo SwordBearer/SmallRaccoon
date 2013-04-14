@@ -14,10 +14,12 @@ import xmu.swordbearer.smallraccoon.http.HttpGetHelper;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 
 public class LazyImageLoader {
-
 	private static final String TAG = "LazyImageLoader";
 	public static LazyImageLoader instance;
 
@@ -28,11 +30,21 @@ public class LazyImageLoader {
 		return instance;
 	}
 
+	public interface ImageLoadListener {
+		void onLoaded(String url, Bitmap bitmap);
+	}
+
 	private Context mContext;
 	private ImageCacheManager imgManager = null;
 	private BlockingQueue<String> urlQueue = new ArrayBlockingQueue<String>(50);
 	private DownloadImageThread downloadThread = new DownloadImageThread();
 	private Map<String, ImageLoadListener> listeners = new HashMap<String, ImageLoadListener>();
+
+	private static final String MSG_IMG_URL = "img_url";
+	private static final String MSG_IMG_BMP = "img_bmp";
+	private static final int MSG_IMG = 4321;
+
+	private ImageHandler imageHandler = new ImageHandler();
 
 	private LazyImageLoader(Context context) {
 		this.mContext = context;
@@ -52,10 +64,10 @@ public class LazyImageLoader {
 	public void loadBitmap(String url, ImageLoadListener listener) {
 		Bitmap bmp = null;
 		bmp = imgManager.getFromCache(url);
-		if (bmp != null) {
-			listener.onLoaded(url, bmp);
-		} else {
+		if (bmp == null) {
 			startDownloadImage(url, listener);
+		} else {
+			listener.onLoaded(url, bmp);
 		}
 	}
 
@@ -87,7 +99,13 @@ public class LazyImageLoader {
 				Log.e(TAG, "DownloadImageThread---run");
 				ImageLoadListener listener = listeners.get(url);
 				// 回调
-				listener.onLoaded(url, bmp);
+				Message msg = imageHandler.obtainMessage(MSG_IMG);
+				Bundle bundle = new Bundle();
+				bundle.putString(MSG_IMG_URL, url);
+				bundle.putParcelable(MSG_IMG_BMP, bmp);
+				msg.setData(bundle);
+				imageHandler.setListener(listener);
+				imageHandler.sendMessage(msg);
 				listeners.remove(url);
 			}
 			isRunning = false;
@@ -101,8 +119,27 @@ public class LazyImageLoader {
 			if (is == null) {
 				return null;
 			}
+			Bitmap bmp = BitmapFactory.decodeStream(is);
 			imgManager.writeToFile(url, is);
-			return BitmapFactory.decodeStream(is);
+			return bmp;
+		}
+	}
+
+	private class ImageHandler extends Handler {
+		private ImageLoadListener mListener;
+
+		public void setListener(ImageLoadListener listener) {
+			this.mListener = listener;
+		}
+
+		@Override
+		public void handleMessage(Message msg) {
+			if (msg.what == MSG_IMG) {
+				Bundle bundle = msg.getData();
+				String url = bundle.getString(MSG_IMG_URL);
+				Bitmap bmp = bundle.getParcelable(MSG_IMG_BMP);
+				this.mListener.onLoaded(url, bmp);
+			}
 		}
 	}
 }

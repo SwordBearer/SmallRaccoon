@@ -62,12 +62,14 @@ public class ImageCacheManager {
 	}
 
 	private Bitmap getFromFileCache(String url) {
-		Log.e(TAG, "getFromFileCache");
+		Bitmap bmp = null;
 		String fileName = this.MD5Encode(url);
+		Log.e(TAG, "getFromFileCache  " + fileName);
 		FileInputStream fis = null;
 		try {
 			fis = mContext.openFileInput(fileName);
-			return BitmapFactory.decodeStream(fis);
+			bmp = BitmapFactory.decodeStream(fis);
+			return bmp;
 		} catch (FileNotFoundException e) {
 			return null;
 		} finally {
@@ -81,9 +83,9 @@ public class ImageCacheManager {
 	}
 
 	public String writeToFile(String url, InputStream inputStream) {
-		Log.e(TAG, "writeToFile");
-		String fileName = this.MD5Encode(url);// 加密后的文件名
 
+		String fileName = this.MD5Encode(url);// 加密后的文件名
+		Log.e(TAG, "writeToFile  " + fileName);
 		BufferedInputStream bis = null;
 		BufferedOutputStream bos = null;
 		try {
