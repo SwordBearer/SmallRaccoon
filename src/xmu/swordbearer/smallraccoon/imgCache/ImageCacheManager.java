@@ -15,8 +15,10 @@ import xmu.swordbearer.smallraccoon.util.MD5Util;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 
 public class ImageCacheManager {
+	private static final String TAG = "ImageCacheManager";
 	private Map<String, SoftReference<Bitmap>> imgMap;
 	private Context mContext;
 
@@ -46,6 +48,7 @@ public class ImageCacheManager {
 	 * @return
 	 */
 	private Bitmap getFromMapCache(String path) {
+		Log.e(TAG, "getFromMapCache");
 		Bitmap bmp = null;
 		SoftReference<Bitmap> ref = null;
 		synchronized (this) {
@@ -59,7 +62,8 @@ public class ImageCacheManager {
 	}
 
 	private Bitmap getFromFileCache(String url) {
-		String fileName = this.getMd5String(url);
+		Log.e(TAG, "getFromFileCache");
+		String fileName = this.MD5Encode(url);
 		FileInputStream fis = null;
 		try {
 			fis = mContext.openFileInput(fileName);
@@ -77,7 +81,8 @@ public class ImageCacheManager {
 	}
 
 	public String writeToFile(String url, InputStream inputStream) {
-		String fileName = MD5Util.getMD5String(url);// 加密后的文件名
+		Log.e(TAG, "writeToFile");
+		String fileName = this.MD5Encode(url);// 加密后的文件名
 
 		BufferedInputStream bis = null;
 		BufferedOutputStream bos = null;
@@ -107,8 +112,8 @@ public class ImageCacheManager {
 		return mContext.getFilesDir() + File.separator + fileName;
 	}
 
-	private String getMd5String(String src) {
-		return MD5Util.getMD5String(src);
+	private String MD5Encode(String src) {
+		return MD5Util.MD5Encode(src);
 	}
 
 }

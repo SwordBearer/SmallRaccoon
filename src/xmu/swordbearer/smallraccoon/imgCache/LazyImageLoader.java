@@ -14,9 +14,11 @@ import xmu.swordbearer.smallraccoon.http.HttpGetHelper;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 
 public class LazyImageLoader {
 
+	private static final String TAG = "LazyImageLoader";
 	public static LazyImageLoader instance;
 
 	public static LazyImageLoader newInstance(Context context) {
@@ -58,6 +60,7 @@ public class LazyImageLoader {
 	}
 
 	private void startDownloadImage(String url, ImageLoadListener listener) {
+		Log.e(TAG, "startDownloadImage");
 		putUrlToQueue(url);
 		listeners.put(url, listener);
 		State state = downloadThread.getState();
@@ -70,16 +73,18 @@ public class LazyImageLoader {
 	}
 
 	private class DownloadImageThread extends Thread {
-		private boolean isRunning = false;
+		private boolean isRunning = true;
 
 		@Override
 		public void run() {
+			Log.e(TAG, "DownloadImageThread---run");
 			while (isRunning) {
 				String url = urlQueue.poll();
 				if (url == null) {
 					break;
 				}
 				Bitmap bmp = downloadImage(url);
+				Log.e(TAG, "DownloadImageThread---run");
 				ImageLoadListener listener = listeners.get(url);
 				// 回调
 				listener.onLoaded(url, bmp);
@@ -89,6 +94,7 @@ public class LazyImageLoader {
 		}
 
 		private Bitmap downloadImage(String url) {
+			Log.e(TAG, "DownloadImageThread---downloadImage");
 			HttpClient httpClient = new DefaultHttpClient();
 			HttpGetHelper helper = new HttpGetHelper();
 			InputStream is = helper.httpGetStream(httpClient, url);
