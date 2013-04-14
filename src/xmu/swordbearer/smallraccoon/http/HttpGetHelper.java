@@ -37,7 +37,6 @@ public class HttpGetHelper {
 	public InputStream httpGetStream(HttpClient httpClient, String uri) {
 		HttpGet httpGet = createHttpGet(uri, null, null, null, null, null,
 				null, null);
-		System.out.println("访问的网址是 " + httpGet.getURI());
 		InputStream inputStream = null;
 		try {
 			HttpResponse response = httpClient.execute(httpGet);
