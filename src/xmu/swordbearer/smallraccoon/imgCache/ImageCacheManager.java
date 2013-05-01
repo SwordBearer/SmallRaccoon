@@ -28,6 +28,7 @@ public class ImageCacheManager {
 	}
 
 	public Bitmap getFromCache(String url) {
+		Log.e(TAG, "getFromCache");
 		Bitmap bmp = null;
 		if (imgMap.containsKey(url)) {
 			bmp = getFromMapCache(url);
@@ -83,13 +84,13 @@ public class ImageCacheManager {
 	}
 
 	public String writeToFile(String url, InputStream inputStream) {
-
 		String fileName = this.MD5Encode(url);// 加密后的文件名
 		Log.e(TAG, "writeToFile  " + fileName);
 		BufferedInputStream bis = null;
 		BufferedOutputStream bos = null;
 		try {
 			bis = new BufferedInputStream(inputStream);
+			Log.e(TAG, "writeToFile inputStreamSize " + inputStream.available());
 			bos = new BufferedOutputStream(mContext.openFileOutput(fileName,
 					Context.MODE_PRIVATE));
 			byte[] buffer = new byte[1024];
@@ -101,9 +102,6 @@ public class ImageCacheManager {
 			e.printStackTrace();
 		} finally {
 			try {
-				if (null != bis) {
-					bis.close();
-				}
 				if (null != bos) {
 					bos.flush();
 					bos.close();

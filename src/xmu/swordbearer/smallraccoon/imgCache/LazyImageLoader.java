@@ -1,5 +1,6 @@
 package xmu.swordbearer.smallraccoon.imgCache;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.lang.Thread.State;
 import java.util.HashMap;
@@ -63,6 +64,7 @@ public class LazyImageLoader {
 
 	public void loadBitmap(String url, ImageLoadListener listener) {
 		Bitmap bmp = null;
+		Log.e(TAG, "loadBitmap " + url);
 		bmp = imgManager.getFromCache(url);
 		if (bmp == null) {
 			startDownloadImage(url, listener);
@@ -107,8 +109,8 @@ public class LazyImageLoader {
 				imageHandler.setListener(listener);
 				imageHandler.sendMessage(msg);
 				listeners.remove(url);
+				isRunning = false;
 			}
-			isRunning = false;
 		}
 
 		private Bitmap downloadImage(String url) {
@@ -119,8 +121,14 @@ public class LazyImageLoader {
 			if (is == null) {
 				return null;
 			}
-			Bitmap bmp = BitmapFactory.decodeStream(is);
 			imgManager.writeToFile(url, is);
+			Bitmap bmp = BitmapFactory.decodeStream(is);
+			if (is != null) {
+				try {
+					is.close();
+				} catch (IOException e) {
+				}
+			}
 			return bmp;
 		}
 	}
@@ -138,7 +146,9 @@ public class LazyImageLoader {
 				Bundle bundle = msg.getData();
 				String url = bundle.getString(MSG_IMG_URL);
 				Bitmap bmp = bundle.getParcelable(MSG_IMG_BMP);
-				this.mListener.onLoaded(url, bmp);
+				if (mListener != null)
+					Log.e(TAG, "更新揭界面！1111");
+					this.mListener.onLoaded(url, bmp);
 			}
 		}
 	}

@@ -14,6 +14,8 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 
+import android.util.Log;
+
 /**
  * Http Get工具类，提供HttpGet相关的方法
  */
@@ -47,6 +49,10 @@ public class HttpGetHelper {
 		} catch (IOException e) {
 			e.printStackTrace();
 			return null;
+		}
+		try {
+			Log.e("TEST", "httpGetStream " + inputStream.available());
+		} catch (IOException e) {
 		}
 		return inputStream;
 		// shutdown...
