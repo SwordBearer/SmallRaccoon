@@ -1,6 +1,5 @@
 package xmu.swordbearer.smallraccoon.imgCache;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.lang.Thread.State;
 import java.util.HashMap;
@@ -43,7 +42,7 @@ public class LazyImageLoader {
 
 	private static final String MSG_IMG_URL = "img_url";
 	private static final String MSG_IMG_BMP = "img_bmp";
-	private static final int MSG_IMG = 4321;
+	private static final int MSG_ID = 4321;
 
 	private ImageHandler imageHandler = new ImageHandler();
 
@@ -64,7 +63,7 @@ public class LazyImageLoader {
 
 	public void loadBitmap(String url, ImageLoadListener listener) {
 		Bitmap bmp = null;
-		Log.e(TAG, "loadBitmap " + url);
+		Log.d(TAG, "loadBitmap " + url);
 		bmp = imgManager.getFromCache(url);
 		if (bmp == null) {
 			startDownloadImage(url, listener);
@@ -74,7 +73,7 @@ public class LazyImageLoader {
 	}
 
 	private void startDownloadImage(String url, ImageLoadListener listener) {
-		Log.e(TAG, "startDownloadImage");
+		Log.d(TAG, "startDownloadImage");
 		putUrlToQueue(url);
 		listeners.put(url, listener);
 		State state = downloadThread.getState();
@@ -91,17 +90,16 @@ public class LazyImageLoader {
 
 		@Override
 		public void run() {
-			Log.e(TAG, "DownloadImageThread---run");
+			Log.d(TAG, "DownloadImageThread---run");
 			while (isRunning) {
-				String url = urlQueue.poll();
+				final String url = urlQueue.poll();
 				if (url == null) {
 					break;
 				}
-				Bitmap bmp = downloadImage(url);
-				Log.e(TAG, "DownloadImageThread---run");
+				final Bitmap bmp = downloadImage(url);
+				/* 图片下载完成后，发送消息刷新界面 */
 				ImageLoadListener listener = listeners.get(url);
-				// 回调
-				Message msg = imageHandler.obtainMessage(MSG_IMG);
+				Message msg = imageHandler.obtainMessage();
 				Bundle bundle = new Bundle();
 				bundle.putString(MSG_IMG_URL, url);
 				bundle.putParcelable(MSG_IMG_BMP, bmp);
@@ -109,26 +107,19 @@ public class LazyImageLoader {
 				imageHandler.setListener(listener);
 				imageHandler.sendMessage(msg);
 				listeners.remove(url);
-				isRunning = false;
 			}
 		}
 
 		private Bitmap downloadImage(String url) {
-			Log.e(TAG, "DownloadImageThread---downloadImage");
+			Log.d(TAG, "DownloadImageThread---downloadImage");
 			HttpClient httpClient = new DefaultHttpClient();
 			HttpGetHelper helper = new HttpGetHelper();
 			InputStream is = helper.httpGetStream(httpClient, url);
 			if (is == null) {
 				return null;
 			}
-			imgManager.writeToFile(url, is);
-			Bitmap bmp = BitmapFactory.decodeStream(is);
-			if (is != null) {
-				try {
-					is.close();
-				} catch (IOException e) {
-				}
-			}
+			String filePath = imgManager.saveToFile(url, is);
+			Bitmap bmp = BitmapFactory.decodeFile(filePath);
 			return bmp;
 		}
 	}
@@ -142,13 +133,11 @@ public class LazyImageLoader {
 
 		@Override
 		public void handleMessage(Message msg) {
-			if (msg.what == MSG_IMG) {
-				Bundle bundle = msg.getData();
-				String url = bundle.getString(MSG_IMG_URL);
-				Bitmap bmp = bundle.getParcelable(MSG_IMG_BMP);
-				if (mListener != null)
-					Log.e(TAG, "更新揭界面！1111");
-					this.mListener.onLoaded(url, bmp);
+			Bundle bundle = msg.getData();
+			String url = bundle.getString(MSG_IMG_URL);
+			Bitmap bmp = bundle.getParcelable(MSG_IMG_BMP);
+			if (mListener != null) {
+				this.mListener.onLoaded(url, bmp);
 			}
 		}
 	}

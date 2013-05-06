@@ -87,7 +87,7 @@ public class LiveListView extends ListView implements OnScrollListener {
 		initFooter(context);
 	}
 
-	public void setShowHeader(boolean isShowHeader) {
+	public void isShowHeader(boolean isShowHeader) {
 		this.isShowHeader = isShowHeader;
 		if (isShowHeader) {
 			headView.setVisibility(View.VISIBLE);
@@ -96,7 +96,7 @@ public class LiveListView extends ListView implements OnScrollListener {
 		}
 	}
 
-	public void setShowFooter(boolean isShowFooter) {
+	public void isShowFooter(boolean isShowFooter) {
 		if (isShowFooter) {
 			footView.setVisibility(View.VISIBLE);
 		} else {
@@ -430,7 +430,9 @@ public class LiveListView extends ListView implements OnScrollListener {
 	@Override
 	public void setAdapter(ListAdapter adapter) {
 		if (adapter.getCount() == 0) {
-			setShowFooter(false);
+			isShowFooter(false);
+		} else {
+			isShowFooter(true);
 		}
 		super.setAdapter(adapter);
 	}

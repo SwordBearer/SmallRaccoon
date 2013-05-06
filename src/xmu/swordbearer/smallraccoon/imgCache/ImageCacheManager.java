@@ -2,7 +2,6 @@ package xmu.swordbearer.smallraccoon.imgCache;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -35,11 +34,15 @@ public class ImageCacheManager {
 		}
 		if (null == bmp) {
 			bmp = getFromFileCache(url);
-			if (null != bmp) {
-				imgMap.put(url, new SoftReference<Bitmap>(bmp));
-			}
+			putIntoMap(url, bmp);
 		}
 		return bmp;
+	}
+
+	public void putIntoMap(String url, Bitmap bmp) {
+		if (null != bmp) {
+			imgMap.put(url, new SoftReference<Bitmap>(bmp));
+		}
 	}
 
 	/**
@@ -83,7 +86,8 @@ public class ImageCacheManager {
 		}
 	}
 
-	public String writeToFile(String url, InputStream inputStream) {
+	public String saveToFile(String url, InputStream inputStream) {
+		Bitmap bmp = null;
 		String fileName = this.MD5Encode(url);// 加密后的文件名
 		Log.e(TAG, "writeToFile  " + fileName);
 		BufferedInputStream bis = null;
@@ -102,14 +106,18 @@ public class ImageCacheManager {
 			e.printStackTrace();
 		} finally {
 			try {
-				if (null != bos) {
+				if (bis != null) {
+					bis.close();
+				}
+				if (bos != null) {
 					bos.flush();
 					bos.close();
 				}
-			} catch (IOException e) {
+			} catch (IOException e2) {
+
 			}
 		}
-		return mContext.getFilesDir() + File.separator + fileName;
+		return mContext.getFilesDir() + "/" + fileName;
 	}
 
 	private String MD5Encode(String src) {
