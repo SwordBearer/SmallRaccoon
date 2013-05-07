@@ -69,6 +69,7 @@ public class LiveListView extends ListView implements OnScrollListener {
 	private int headState;
 	private boolean isBack;
 	private boolean isShowHeader;
+	private boolean isShowFooter;
 
 	private int footState;
 
@@ -97,11 +98,7 @@ public class LiveListView extends ListView implements OnScrollListener {
 	}
 
 	public void isShowFooter(boolean isShowFooter) {
-		if (isShowFooter) {
-			footView.setVisibility(View.VISIBLE);
-		} else {
-			footView.setVisibility(View.INVISIBLE);
-		}
+		this.isShowFooter = isShowFooter;
 	}
 
 	private void initHeader(Context context) {
@@ -429,12 +426,12 @@ public class LiveListView extends ListView implements OnScrollListener {
 
 	@Override
 	public void setAdapter(ListAdapter adapter) {
-		if (adapter.getCount() == 0) {
-			isShowFooter(false);
-		} else {
-			isShowFooter(true);
-		}
 		super.setAdapter(adapter);
+		if (isShowFooter) {
+			footView.setVisibility(View.VISIBLE);
+		} else {
+			footView.setVisibility(View.GONE);
+		}
 	}
 
 	// 计算headView的width及height值
