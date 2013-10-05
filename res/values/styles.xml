@@ -2,6 +2,7 @@
 
     <style name="AppBaseTheme" parent="android:Theme.Light.NoTitleBar">
     </style>
+
     <style name="AppTheme" parent="AppBaseTheme">
     </style>
 

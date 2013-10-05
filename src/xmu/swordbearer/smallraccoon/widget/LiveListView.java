@@ -1,6 +1,5 @@
 package xmu.swordbearer.smallraccoon.widget;
 
-import xmu.swordbearer.smallraccoon.R;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -10,15 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
-import android.widget.AbsListView;
+import android.widget.*;
 import android.widget.AbsListView.OnScrollListener;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListAdapter;
-import android.widget.ListView;
-import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
+import xmu.swordbearer.smallraccoon.R;
 
 /**
  * 下拉刷新,点击加载更多控件
@@ -103,41 +96,32 @@ public class LiveListView extends ListView implements OnScrollListener {
 
 	private void initHeader(Context context) {
 		// 设置滑动效果
-		animation = new RotateAnimation(0, -180,
-				RotateAnimation.RELATIVE_TO_SELF, 0.5f,
-				RotateAnimation.RELATIVE_TO_SELF, 0.5f);
+		animation = new RotateAnimation(0, -180, RotateAnimation.RELATIVE_TO_SELF, 0.5f, RotateAnimation.RELATIVE_TO_SELF, 0.5f);
 		animation.setInterpolator(new LinearInterpolator());
 		animation.setDuration(100);
 		animation.setFillAfter(true);
 
-		reverseAnimation = new RotateAnimation(-180, 0,
-				RotateAnimation.RELATIVE_TO_SELF, 0.5f,
-				RotateAnimation.RELATIVE_TO_SELF, 0.5f);
+		reverseAnimation = new RotateAnimation(-180, 0, RotateAnimation.RELATIVE_TO_SELF, 0.5f, RotateAnimation.RELATIVE_TO_SELF, 0.5f);
 		reverseAnimation.setInterpolator(new LinearInterpolator());
 		reverseAnimation.setDuration(100);
 		reverseAnimation.setFillAfter(true);
 
 		inflater = LayoutInflater.from(context);
-		headView = (LinearLayout) inflater.inflate(
-				R.layout.live_listview_header, null);
+		headView = (LinearLayout) inflater.inflate(R.layout.live_listview_header, null);
 
-		arrowImageView = (ImageView) headView
-				.findViewById(R.id.head_arrowImageView);
+		arrowImageView = (ImageView) headView.findViewById(R.id.head_arrowImageView);
 		arrowImageView.setMinimumWidth(50);
 		arrowImageView.setMinimumHeight(50);
-		headProgressBar = (ProgressBar) headView
-				.findViewById(R.id.head_progressBar);
+		headProgressBar = (ProgressBar) headView.findViewById(R.id.head_progressBar);
 		tipsTextview = (TextView) headView.findViewById(R.id.head_tipsTextView);
-		lastUpdatedTextView = (TextView) headView
-				.findViewById(R.id.head_lastUpdatedTextView);
+		lastUpdatedTextView = (TextView) headView.findViewById(R.id.head_lastUpdatedTextView);
 
 		headContentOriginalTopPadding = headView.getPaddingTop();
 
 		measureView(headView);
 		headContentHeight = headView.getMeasuredHeight();
 
-		headView.setPadding(headView.getPaddingLeft(), -1 * headContentHeight,
-				headView.getPaddingRight(), headView.getPaddingBottom());
+		headView.setPadding(headView.getPaddingLeft(), -1 * headContentHeight, headView.getPaddingRight(), headView.getPaddingBottom());
 		headView.invalidate();
 
 		addHeaderView(headView);
@@ -145,11 +129,9 @@ public class LiveListView extends ListView implements OnScrollListener {
 	}
 
 	private void initFooter(Context context) {
-		footView = (RelativeLayout) inflater.inflate(
-				R.layout.live_listview_footer, null);
+		footView = (RelativeLayout) inflater.inflate(R.layout.live_listview_footer, null);
 		footTipsTextView = (TextView) footView.findViewById(R.id.foot_tv_more);
-		footProgressBar = (ProgressBar) footView
-				.findViewById(R.id.foot_progressBar);
+		footProgressBar = (ProgressBar) footView.findViewById(R.id.foot_progressBar);
 		addFooterView(footView);
 
 		footView.setOnClickListener(new View.OnClickListener() {
@@ -168,8 +150,7 @@ public class LiveListView extends ListView implements OnScrollListener {
 		});
 	}
 
-	public void onScroll(AbsListView view, int firstVisiableItem,
-			int visibleItemCount, int totalItemCount) {
+	public void onScroll(AbsListView view, int firstVisiableItem, int visibleItemCount, int totalItemCount) {
 		firstItemIndex = firstVisiableItem;
 	}
 
@@ -224,8 +205,7 @@ public class LiveListView extends ListView implements OnScrollListener {
 				// 可以松开刷新了
 				if (headState == STATE_RELEASE_To_REFRESH) {
 					// 往上推，推到屏幕足够掩盖head的程度，但还没有全部掩盖
-					if ((tempY - startY < headContentHeight + 20)
-							&& (tempY - startY) > 0) {
+					if ((tempY - startY < headContentHeight + 20) && (tempY - startY) > 0) {
 						headState = STATE_PULL_To_REFRESH;
 						changeHeaderViewByState();
 						// System.out.println("当前-滑动-ACTION_MOVE：RELEASE_To_REFRESH--》PULL_To_REFRESH-由松开刷新状态转变到下拉刷新状态");
@@ -244,8 +224,7 @@ public class LiveListView extends ListView implements OnScrollListener {
 				// 还没有到达显示松开刷新的时候,DONE或者是PULL_To_REFRESH状态
 				else if (headState == STATE_PULL_To_REFRESH) {
 					// 下拉到可以进入RELEASE_TO_REFRESH的状态
-					if (tempY - startY >= headContentHeight + 20
-							&& currentScrollState == SCROLL_STATE_TOUCH_SCROLL) {
+					if (tempY - startY >= headContentHeight + 20 && currentScrollState == SCROLL_STATE_TOUCH_SCROLL) {
 						headState = STATE_RELEASE_To_REFRESH;
 						isBack = true;
 						changeHeaderViewByState();
@@ -270,9 +249,7 @@ public class LiveListView extends ListView implements OnScrollListener {
 				// 更新headView的size
 				if (headState == STATE_PULL_To_REFRESH) {
 					int topPadding = (int) ((-1 * headContentHeight + (tempY - startY)));
-					headView.setPadding(headView.getPaddingLeft(), topPadding,
-							headView.getPaddingRight(),
-							headView.getPaddingBottom());
+					headView.setPadding(headView.getPaddingLeft(), topPadding, headView.getPaddingRight(), headView.getPaddingBottom());
 					headView.invalidate();
 					// System.out.println("当前-下拉刷新PULL_To_REFRESH-TopPad："+topPadding);
 				}
@@ -280,9 +257,7 @@ public class LiveListView extends ListView implements OnScrollListener {
 				// 更新headView的paddingTop
 				if (headState == STATE_RELEASE_To_REFRESH) {
 					int topPadding = (int) ((tempY - startY - headContentHeight));
-					headView.setPadding(headView.getPaddingLeft(), topPadding,
-							headView.getPaddingRight(),
-							headView.getPaddingBottom());
+					headView.setPadding(headView.getPaddingLeft(), topPadding, headView.getPaddingRight(), headView.getPaddingBottom());
 					headView.invalidate();
 					// System.out.println("当前-释放刷新RELEASE_To_REFRESH-TopPad："+topPadding);
 				}
@@ -327,9 +302,7 @@ public class LiveListView extends ListView implements OnScrollListener {
 
 		case STATE_REFRESHING:
 			// System.out.println("刷新REFRESHING-TopPad："+headContentOriginalTopPadding);
-			headView.setPadding(headView.getPaddingLeft(),
-					headContentOriginalTopPadding, headView.getPaddingRight(),
-					headView.getPaddingBottom());
+			headView.setPadding(headView.getPaddingLeft(), headContentOriginalTopPadding, headView.getPaddingRight(), headView.getPaddingBottom());
 			headView.invalidate();
 
 			headProgressBar.setVisibility(View.VISIBLE);
@@ -342,9 +315,7 @@ public class LiveListView extends ListView implements OnScrollListener {
 			break;
 		case STATE_REFRESH_DONE:
 			// System.out.println("完成DONE-TopPad："+(-1 * headContentHeight));
-			headView.setPadding(headView.getPaddingLeft(), -1
-					* headContentHeight, headView.getPaddingRight(),
-					headView.getPaddingBottom());
+			headView.setPadding(headView.getPaddingLeft(), -1 * headContentHeight, headView.getPaddingRight(), headView.getPaddingBottom());
 			headView.invalidate();
 
 			headProgressBar.setVisibility(View.GONE);
@@ -438,18 +409,15 @@ public class LiveListView extends ListView implements OnScrollListener {
 	private void measureView(View child) {
 		ViewGroup.LayoutParams p = child.getLayoutParams();
 		if (p == null) {
-			p = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT,
-					ViewGroup.LayoutParams.WRAP_CONTENT);
+			p = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 		}
 		int childWidthSpec = ViewGroup.getChildMeasureSpec(0, 0 + 0, p.width);
 		int lpHeight = p.height;
 		int childHeightSpec;
 		if (lpHeight > 0) {
-			childHeightSpec = MeasureSpec.makeMeasureSpec(lpHeight,
-					MeasureSpec.EXACTLY);
+			childHeightSpec = MeasureSpec.makeMeasureSpec(lpHeight, MeasureSpec.EXACTLY);
 		} else {
-			childHeightSpec = MeasureSpec.makeMeasureSpec(0,
-					MeasureSpec.UNSPECIFIED);
+			childHeightSpec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
 		}
 		child.measure(childWidthSpec, childHeightSpec);
 	}

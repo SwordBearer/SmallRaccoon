@@ -1,10 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="loading_small" parent="@android:style/Widget.ProgressBar.Small">
-        <item name="android:indeterminateDrawable">@anim/loading</item>
+    <style name="loading_dark" parent="@android:style/Widget.ProgressBar.Small">
+        <item name="android:indeterminateDrawable">@anim/loading_dark</item>
         <item name="android:layout_width">21dip</item>
         <item name="android:layout_height">21dip</item>
+        <item name="android:layout_gravity">center_vertical</item>
+    </style>
+
+    <style name="loading_light" parent="@android:style/Widget.ProgressBar.Small">
+        <item name="android:indeterminateDrawable">@anim/loading_light</item>
+        <item name="android:layout_width">32dip</item>
+        <item name="android:layout_height">32dip</item>
         <item name="android:layout_gravity">center_vertical</item>
     </style>
 
