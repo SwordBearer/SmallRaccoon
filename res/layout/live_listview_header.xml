@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:background="#C0C0C0"
-    android:orientation="vertical"
-    android:padding="10dp" >
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:background="#C0C0C0"
+              android:orientation="vertical"
+              android:padding="10dp">
 
     <RelativeLayout
         android:id="@+id/head_contentLayout"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content">
 
         <LinearLayout
             android:id="@+id/head_text_container"
@@ -17,38 +17,38 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:gravity="center_horizontal"
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/head_tipsTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/live_listview_pull" />
+                android:text="@string/live_listview_pull"/>
 
             <TextView
                 android:id="@+id/head_lastUpdatedTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="10sp" />
+                android:textSize="10sp"/>
         </LinearLayout>
 
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="20dp"
-            android:layout_toLeftOf="@id/head_text_container" >
+            android:layout_toLeftOf="@id/head_text_container">
 
             <ImageView
                 android:id="@+id/head_arrowImageView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:src="@drawable/ic_pulltorefresh_arrow" />
+                android:src="@drawable/ic_pulltorefresh_arrow"/>
 
             <ProgressBar
                 android:id="@+id/head_progressBar"
                 style="@style/loading_light"
-                android:visibility="gone" />
+                android:visibility="gone"/>
         </RelativeLayout>
     </RelativeLayout>
 

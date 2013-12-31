@@ -55,7 +55,7 @@ public class CacheUtil {
      * 读取缓存文件
      *
      * @param context
-     * @param key 文件名
+     * @param key     文件名
      * @return 返回Object对象:如果返回的实体可以被反序列化，可以使用Serializable进行类型转换
      */
     public static Object readCache(Context context, String key) {

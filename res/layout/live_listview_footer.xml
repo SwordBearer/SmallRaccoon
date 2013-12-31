@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:layout_gravity="bottom"
-    android:background="#C0C0C0"
-    android:clickable="true"
-    android:padding="10dp" >
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:background="#C0C0C0"
+                android:clickable="true"
+                android:padding="10dp">
 
     <TextView
         android:id="@+id/foot_tv_more"
@@ -13,13 +13,13 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:text="@string/live_listview_click_more"
-        android:textSize="10sp" />
+        android:textSize="10sp"/>
 
     <ProgressBar
         android:id="@+id/foot_progressBar"
         style="@style/loading_light"
         android:layout_marginRight="20dp"
         android:layout_toLeftOf="@id/foot_tv_more"
-        android:visibility="invisible" />
+        android:visibility="invisible"/>
 
 </RelativeLayout>

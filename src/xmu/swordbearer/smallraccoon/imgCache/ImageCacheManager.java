@@ -4,12 +4,18 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
-import xmu.swordbearer.smallraccoon.util.MD5Util;
 
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.ref.SoftReference;
 import java.util.HashMap;
 import java.util.Map;
+
+import xmu.swordbearer.smallraccoon.util.MD5Util;
 
 public class ImageCacheManager {
     private static final String TAG = "ImageCacheManager";

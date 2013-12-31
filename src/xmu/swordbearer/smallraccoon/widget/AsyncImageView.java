@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.util.AttributeSet;
 import android.widget.ImageView;
+
 import xmu.swordbearer.smallraccoon.util.NetUtil;
 
 /**
