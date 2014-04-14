@@ -99,6 +99,11 @@ public class LiveListView extends ListView implements OnScrollListener {
 
 	public void isShowFooter(boolean isShowFooter) {
 		this.isShowFooter = isShowFooter;
+		if (isShowFooter) {
+			footView.setVisibility(View.VISIBLE);
+		} else {
+			footView.setVisibility(View.GONE);
+		}
 	}
 
 	private void initHeader(Context context) {
