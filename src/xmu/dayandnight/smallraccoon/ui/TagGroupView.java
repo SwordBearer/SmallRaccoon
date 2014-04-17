@@ -24,14 +24,17 @@ public class TagGroupView extends AdaptiveViewGroup {
 
     private List<String> tags;
 
-    private boolean isDeletable = true;// 是否可以长按删除
+    private boolean isDeletable = false;// 是否可以长按删除
     private boolean isUnderDelete = false;// 是否处在删除状态
+
+    private boolean canRepeat = false;// tag是否可以重复
 
     private void initValues() {
         this.setChildMargin(6);
         this.tags = new ArrayList<String>();
         this.isUnderDelete = false;
-        this.isDeletable = true;
+        this.isDeletable = false;
+        this.canRepeat = false;
     }
 
     public TagGroupView(Context context) {
@@ -49,9 +52,29 @@ public class TagGroupView extends AdaptiveViewGroup {
         initValues();
     }
 
+    public boolean isCanRepeat() {
+        return canRepeat;
+    }
+
+    public void setCanRepeat(boolean canRepeat) {
+        this.canRepeat = canRepeat;
+    }
+
+    public boolean isUnderDelete() {
+        return isUnderDelete;
+    }
+
+    public void setUnderDelete(boolean isUnderDelete) {
+        this.isUnderDelete = isUnderDelete;
+    }
+
+    public boolean isDeletable() {
+        return isDeletable;
+    }
+
     /**
      * 是否可以长按删除tag，默认为true
-     *
+     * 
      * @param isDeletable
      */
     public void setDeletable(boolean isDeletable) {
@@ -60,7 +83,7 @@ public class TagGroupView extends AdaptiveViewGroup {
 
     /**
      * 设置tag列表
-     *
+     * 
      * @param data
      */
     public void setTags(List<String> data) {
@@ -74,21 +97,36 @@ public class TagGroupView extends AdaptiveViewGroup {
 
     /**
      * 增加一个tag标签 , 注意：不能添加重复的标签
-     *
+     * 
      * @param tag
      */
-    public void addTag(String tag) {
-        if (this.tags.contains(tag)) {
-            return;
+    public boolean addTag(String tag) {
+        if (this.tags == null) {
+            this.tags = new ArrayList<String>();
+        }
+        if (!this.canRepeat && containsTag(tag)) {
+            return false;
         }
         this.tags.add(tag);
         refresh();
+        return true;
+    }
+
+    /**
+     * 是否包含tag
+     * 
+     * @param tag
+     * @return TRUE if contains, otherwise FALSE
+     */
+    public boolean containsTag(String tag) {
+        return this.tags.contains(tag);
     }
 
     /**
      * 删除指定位置的tag
-     *
-     * @param index tag的索引，以0为起点
+     * 
+     * @param index
+     *            tag的索引，以0为起点
      */
     public void removeTag(int index) {
         if (index >= this.tags.size()) {
@@ -101,7 +139,7 @@ public class TagGroupView extends AdaptiveViewGroup {
 
     /**
      * 获得所有的tag
-     *
+     * 
      * @return
      */
     public List<String> getTags() {
@@ -114,8 +152,9 @@ public class TagGroupView extends AdaptiveViewGroup {
 
     /**
      * 获得某一位置的tag
-     *
-     * @param index tag的索引，以0为起点
+     * 
+     * @param index
+     *            tag的索引，以0为起点
      * @return
      */
     public String getTagAt(int index) {
@@ -167,7 +206,7 @@ public class TagGroupView extends AdaptiveViewGroup {
 
     /**
      * 是否显示删除按钮
-     *
+     * 
      * @param flag
      */
     public void showDeleteButton(boolean flag) {
@@ -206,3 +245,4 @@ public class TagGroupView extends AdaptiveViewGroup {
         }
     };
 }
+
